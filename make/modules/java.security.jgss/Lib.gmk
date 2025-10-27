@@ -95,6 +95,22 @@ ifneq ($(BUILD_CRYPTO), false)
 
     TARGETS += $(BUILD_LIBOSXKRB5)
   endif
+
+  ifeq ($(call isTargetOs, linux), true)
+    ifeq ($(ENABLE_LIBLINUXKRB5), true)
+      $(eval $(call SetupJdkLibrary, BUILD_LIBLINUXKRB5, \
+          NAME := linuxkrb5, \
+          OPTIMIZATION := LOW, \
+          DISABLED_WARNINGS_clang_nativeccache.c := deprecated-declarations, \
+          EXTRA_HEADER_DIRS := java.base:libjava, \
+          CFLAGS_linux := $(KRB5_CFLAGS) $(COM_ERR_CFLAGS), \
+          LIBS_linux := $(KRB5_LIBS) $(COM_ERR_LIBS), \
+      ))
+
+      TARGETS += $(BUILD_LIBLINUXKRB5)
+    endif
+  endif
+
 endif
 
 ################################################################################
